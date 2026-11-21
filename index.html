@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10131d">
+<title>Marvel Watchlist | Your MCU Journey</title>
+<style>
+:root{--bg:#0b0e16;--panel:#151a27;--panel2:#1c2333;--text:#f4f5fb;--muted:#a8b0c3;--red:#e62429;--gold:#f4c95d;--line:#2b3448;--green:#63d6a2}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#27203a 0,transparent 35%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{padding:34px 20px 24px;background:linear-gradient(120deg,#191d2c,#27141e 75%,#39151b);border-bottom:1px solid var(--line)}
+.wrap{max-width:1050px;margin:auto}.eyebrow{color:#ff9ca0;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+h1{font-size:clamp(30px,6vw,54px);line-height:1.04;margin:9px 0 10px;letter-spacing:-.04em}.sub{color:#d1d4df;max-width:680px;margin:0}
+main{max-width:1050px;margin:0 auto;padding:22px 16px 60px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+.stat,.progress-card,.toolbar,.level,.note{background:var(--panel);border:1px solid var(--line);border-radius:16px}
+.stat{padding:14px}.stat b{display:block;font-size:24px}.stat span{color:var(--muted);font-size:12px}
+.progress-card{padding:16px;margin-bottom:18px}.progress-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px}.bar{height:10px;background:#30394c;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--red),#ff7a5c);border-radius:99px;transition:width .2s}
+.toolbar{padding:12px;display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:9px;margin-bottom:18px}
+input,select,button{font:inherit}input[type=search],select{width:100%;background:#0e1320;color:var(--text);border:1px solid #39445b;border-radius:10px;padding:11px;min-width:0}
+button{border:1px solid #4a5368;background:#252d40;color:var(--text);padding:10px 13px;border-radius:10px;cursor:pointer;font-weight:650}
+button:hover{filter:brightness(1.15)}button.primary{background:var(--red);border-color:var(--red)}button.small{font-size:12px;padding:7px 9px}
+.level{margin:16px 0;overflow:hidden}.level-head{padding:17px 18px;background:linear-gradient(90deg,#20283a,#191e2c);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer}
+.level-head h2{font-size:18px;margin:0}.level-head p{margin:3px 0 0;color:var(--muted);font-size:12px}.count{white-space:nowrap;color:var(--muted);font-size:12px}
+.items{padding:4px 14px 12px}.group-title{color:#ff9ca0;font-size:12px;letter-spacing:.09em;text-transform:uppercase;margin:17px 4px 7px}
+.item{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;padding:10px 5px;border-bottom:1px solid #252d3e}
+.item:last-child{border-bottom:0}.item input{width:18px;height:18px;accent-color:var(--red);cursor:pointer}
+.item label{cursor:pointer}.item .name{font-weight:620}.item .meta{display:block;color:var(--muted);font-size:12px}.item.done .name{text-decoration:line-through;color:#8f98aa}.tag{font-size:10px;color:#f5d98b;border:1px solid #66552c;border-radius:99px;padding:3px 7px;white-space:nowrap}
+.empty{padding:24px;text-align:center;color:var(--muted)}.note{padding:15px;color:var(--muted);font-size:13px;margin-top:18px}
+footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
+@media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.toolbar button{grid-column:auto}.item{grid-template-columns:24px 1fr}.tag{grid-column:2;justify-self:start}.level-head{align-items:flex-start}.count{font-size:11px}}
+@media(max-width:390px){.toolbar{grid-template-columns:1fr}.toolbar input{grid-column:auto}.toolbar button{width:100%}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="eyebrow">Your personal Marvel journey</div>
+<h1>MARVEL<br>WATCHLIST</h1>
+<p class="sub">Satu semesta, banyak cerita. Tandai tontonanmu, pantau progres, dan lanjutkan petualangan Marvel kapan saja.</p>
+</div></header>
+<main>
+<section class="stats" aria-label="Ringkasan progres">
+<div class="stat"><b id="total">0</b><span>Total judul</span></div>
+<div class="stat"><b id="watched">0</b><span>Sudah ditonton</span></div>
+<div class="stat"><b id="remaining">0</b><span>Belum ditonton</span></div>
+<div class="stat"><b id="percent">0%</b><span>Progres keseluruhan</span></div>
+</section>
+<section class="progress-card">
+<div class="progress-top"><strong>Perjalanan Marvel-mu</strong><span id="progressLabel">0 dari 0 selesai</span></div>
+<div class="bar"><div class="fill" id="progressFill"></div></div>
+</section>
+<section class="toolbar">
+<input id="search" type="search" placeholder="Cari judul, karakter, atau tahun…" aria-label="Cari tontonan">
+<select id="levelFilter" aria-label="Filter level"><option value="all">Semua level</option><option value="1">Level 1 · Main Story</option><option value="2">Level 2 · Character Development</option><option value="3">Level 3 · Multiverse</option></select>
+<select id="statusFilter" aria-label="Filter status"><option value="all">Semua status</option><option value="todo">Belum ditonton</option><option value="done">Sudah ditonton</option></select>
+<button id="reset" class="small">Reset progres</button>
+</section>
+<div id="watchlist"></div>
+<section class="note">
+<strong>Catatan penyimpanan:</strong> progres disimpan di browser/perangkat ini. Untuk memindahkan progres ke perangkat lain, gunakan tombol ekspor dan impor. Jika website dipublikasikan, alamatnya bisa dibuka dari Chrome di mana saja, tetapi sinkronisasi otomatis antarperangkat memerlukan layanan akun/database tambahan.
+<br><br><button id="export" class="small">Ekspor progres</button> <button id="import" class="small">Impor progres</button>
+<input id="fileInput" type="file" accept="application/json" hidden>
+</section>
+</main>
+<footer>Dibuat untuk menemani perjalanan Marvel-mu ✦ Urutan berdasarkan tahun rilis, bukan kronologi cerita.</footer>
+<script>
+const entries = [
+[1,"Phase 1","Iron Man",2008,"film","⭐ Penting"],[1,"Phase 1","The Incredible Hulk",2008,"film"],[1,"Phase 1","Iron Man 2",2010,"film"],[1,"Phase 1","Thor",2011,"film"],[1,"Phase 1","Captain America: The First Avenger",2011,"film","⭐ Penting"],[1,"Phase 1","The Avengers",2012,"film","⭐ Penting"],
+[1,"Phase 2","Iron Man 3",2013,"film"],[1,"Phase 2","Thor: The Dark World",2013,"film"],[1,"Phase 2","Captain America: The Winter Soldier",2014,"film","⭐ Penting"],[1,"Phase 2","Guardians of the Galaxy",2014,"film"],[1,"Phase 2","Avengers: Age of Ultron",2015,"film","⭐ Penting"],[1,"Phase 2","Ant-Man",2015,"film"],
+[1,"Phase 3","Captain America: Civil War",2016,"film","⭐ Penting"],[1,"Phase 3","Doctor Strange",2016,"film"],[1,"Phase 3","Guardians of the Galaxy Vol. 2",2017,"film"],[1,"Phase 3","Spider-Man: Homecoming",2017,"film"],[1,"Phase 3","Thor: Ragnarok",2017,"film"],[1,"Phase 3","Black Panther",2018,"film"],[1,"Phase 3","Avengers: Infinity War",2018,"film","⭐ Penting"],[1,"Phase 3","Ant-Man and the Wasp",2018,"film"],[1,"Phase 3","Captain Marvel",2019,"film"],[1,"Phase 3","Avengers: Endgame",2019,"film","⭐ Penting"],[1,"Phase 3","Spider-Man: Far From Home",2019,"film"],
+[1,"Phase 4","Black Widow",2021,"film"],[1,"Phase 4","Shang-Chi and the Legend of the Ten Rings",2021,"film"],[1,"Phase 4","Eternals",2021,"film"],[1,"Phase 4","Spider-Man: No Way Home",2021,"film","⭐ Penting"],[1,"Phase 4","Doctor Strange in the Multiverse of Madness",2022,"film","⭐ Penting"],[1,"Phase 4","Thor: Love and Thunder",2022,"film"],[1,"Phase 4","Black Panther: Wakanda Forever",2022,"film"],
+[1,"Phase 5","Ant-Man and the Wasp: Quantumania",2023,"film","⭐ Penting"],[1,"Phase 5","Guardians of the Galaxy Vol. 3",2023,"film"],[1,"Phase 5","The Marvels",2023,"film"],[1,"Phase 5","Deadpool & Wolverine",2024,"film","⭐ Penting"],[1,"Phase 5","Captain America: Brave New World",2025,"film","⭐ Penting"],[1,"Phase 5","Thunderbolts*",2025,"film","⭐ Penting"],
+[1,"Phase 6","The Fantastic Four: First Steps",2025,"film","⭐ Penting"],[1,"Phase 6","Spider-Man: Brand New Day",2026,"film","Belum rilis / cek jadwal"],[1,"Phase 6","Avengers: Doomsday",2026,"film","Belum rilis / cek jadwal"],
+[2,"Serial utama MCU","WandaVision",2021,"serial","⭐ Penting"],[2,"Serial utama MCU","The Falcon and the Winter Soldier",2021,"serial"],[2,"Serial utama MCU","Loki — Season 1",2021,"serial","⭐ Penting"],[2,"Serial utama MCU","Hawkeye",2021,"serial"],[2,"Serial utama MCU","Moon Knight",2022,"serial"],[2,"Serial utama MCU","Ms. Marvel",2022,"serial"],[2,"Serial utama MCU","I Am Groot — Season 1",2022,"serial"],[2,"Serial utama MCU","She-Hulk: Attorney at Law",2022,"serial"],[2,"Serial utama MCU","I Am Groot — Season 2",2023,"serial"],[2,"Serial utama MCU","Secret Invasion",2023,"serial"],[2,"Serial utama MCU","Loki — Season 2",2023,"serial","⭐ Penting"],[2,"Serial utama MCU","Echo",2024,"serial"],[2,"Serial utama MCU","Agatha All Along",2024,"serial","⭐ Penting"],[2,"Serial utama MCU","Daredevil: Born Again — Season 1",2025,"serial"],[2,"Serial utama MCU","Ironheart",2025,"serial"],[2,"Serial utama MCU","Wonder Man",2026,"serial"],[2,"Serial utama MCU","Daredevil: Born Again — Season 2",2026,"serial"],[2,"Serial utama MCU","VisionQuest",2026,"serial"],
+[2,"Animasi Marvel","What If...? — Season 1",2021,"animasi"],[2,"Animasi Marvel","What If...? — Season 2",2023,"animasi"],[2,"Animasi Marvel","What If...? — Season 3",2024,"animasi"],[2,"Animasi Marvel","Your Friendly Neighborhood Spider-Man",2025,"animasi"],[2,"Animasi Marvel","Eyes of Wakanda",2025,"animasi"],[2,"Animasi Marvel","Marvel Zombies",2025,"animasi"],
+[2,"Marvel Netflix / Defenders Saga","Daredevil — Season 1",2015,"serial","⭐ Penting"],[2,"Marvel Netflix / Defenders Saga","Jessica Jones — Season 1",2015,"serial"],[2,"Marvel Netflix / Defenders Saga","Daredevil — Season 2",2016,"serial"],[2,"Marvel Netflix / Defenders Saga","Luke Cage — Season 1",2016,"serial"],[2,"Marvel Netflix / Defenders Saga","Iron Fist — Season 1",2017,"serial"],[2,"Marvel Netflix / Defenders Saga","The Defenders",2017,"serial"],[2,"Marvel Netflix / Defenders Saga","The Punisher — Season 1",2017,"serial"],[2,"Marvel Netflix / Defenders Saga","Jessica Jones — Season 2",2018,"serial"],[2,"Marvel Netflix / Defenders Saga","Luke Cage — Season 2",2018,"serial"],[2,"Marvel Netflix / Defenders Saga","Iron Fist — Season 2",2018,"serial"],[2,"Marvel Netflix / Defenders Saga","Daredevil — Season 3",2018,"serial","⭐ Penting"],[2,"Marvel Netflix / Defenders Saga","The Punisher — Season 2",2019,"serial"],[2,"Marvel Netflix / Defenders Saga","Jessica Jones — Season 3",2019,"serial"],
+[2,"Special & film pendek","The Consultant",2011,"short"],[2,"Special & film pendek","A Funny Thing Happened on the Way to Thor's Hammer",2011,"short"],[2,"Special & film pendek","Item 47",2012,"short"],[2,"Special & film pendek","Agent Carter (One-Shot)",2013,"short"],[2,"Special & film pendek","All Hail the King",2014,"short"],[2,"Special & film pendek","Team Thor",2016,"short"],[2,"Special & film pendek","Team Thor: Part 2",2017,"short"],[2,"Special & film pendek","Team Darryl",2018,"short"],[2,"Special & film pendek","Werewolf by Night",2022,"special"],[2,"Special & film pendek","The Guardians of the Galaxy Holiday Special",2022,"special"],[2,"Special & film pendek","The Punisher: One Last Kill",2026,"special"],
+[3,"X-Men & Wolverine","X-Men",2000,"film","⭐ Penting"],[3,"X-Men & Wolverine","X2: X-Men United",2003,"film"],[3,"X-Men & Wolverine","X-Men: The Last Stand",2006,"film"],[3,"X-Men & Wolverine","X-Men Origins: Wolverine",2009,"film"],[3,"X-Men & Wolverine","X-Men: First Class",2011,"film","⭐ Penting"],[3,"X-Men & Wolverine","The Wolverine",2013,"film"],[3,"X-Men & Wolverine","X-Men: Days of Future Past",2014,"film","⭐ Penting"],[3,"X-Men & Wolverine","Deadpool",2016,"film"],[3,"X-Men & Wolverine","X-Men: Apocalypse",2016,"film"],[3,"X-Men & Wolverine","Logan",2017,"film","⭐ Penting"],[3,"X-Men & Wolverine","Deadpool 2",2018,"film"],[3,"X-Men & Wolverine","Dark Phoenix",2019,"film"],[3,"X-Men & Wolverine","The New Mutants",2020,"film"],
+[3,"Spider-Man — Tobey Maguire","Spider-Man",2002,"film","⭐ Penting"],[3,"Spider-Man — Tobey Maguire","Spider-Man 2",2004,"film","⭐ Penting"],[3,"Spider-Man — Tobey Maguire","Spider-Man 3",2007,"film"],[3,"Spider-Man — Andrew Garfield","The Amazing Spider-Man",2012,"film","⭐ Penting"],[3,"Spider-Man — Andrew Garfield","The Amazing Spider-Man 2",2014,"film","⭐ Penting"],
+[3,"Fantastic Four — versi lama","Fantastic Four",2005,"film"],[3,"Fantastic Four — versi lama","Fantastic Four: Rise of the Silver Surfer",2007,"film"],[3,"Fantastic Four — versi lama","Fantastic Four (2015 reboot)",2015,"film"]
+];
+const STORAGE="marvel-watchlist-v1";
+let watched=new Set(JSON.parse(localStorage.getItem(STORAGE)||"[]"));
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function save(){localStorage.setItem(STORAGE,JSON.stringify([...watched]));render()}
+function render(){
+ const done=entries.filter((e,i)=>watched.has(i)).length,total=entries.length,pct=Math.round(done/total*100);
+ $("total").textContent=total;$("watched").textContent=done;$("remaining").textContent=total-done;$("percent").textContent=pct+"%";
+ $("progressLabel").textContent=done+" dari "+total+" selesai";$("progressFill").style.width=pct+"%";
+ const q=$("search").value.trim().toLowerCase(),lf=$("levelFilter").value,sf=$("statusFilter").value;
+ const host=$("watchlist");host.innerHTML="";
+ const levelNames={1:"LEVEL 1 — MAIN STORY",2:"LEVEL 2 — CHARACTER DEVELOPMENT",3:"LEVEL 3 — MULTIVERSE EXPLORATION"};
+ let visible=0;
+ [1,2,3].forEach(level=>{
+  if(lf!=="all"&&lf!==String(level))return;
+  const subset=entries.map((e,i)=>({...{e,i}})).filter(x=>x.e[0]===level&&
+   (sf==="all"||(sf==="done"&&watched.has(x.i))||(sf==="todo"&&!watched.has(x.i)))&&
+   (!q||x.e.slice(1,5).join(" ").toLowerCase().includes(q)));
+  if(!subset.length)return;visible+=subset.length;
+  const section=document.createElement("section");section.className="level";
+  const countDone=subset.filter(x=>watched.has(x.i)).length;
+  section.innerHTML=`<div class="level-head"><div><h2>${levelNames[level]}</h2><p>${level===1?"Fondasi cerita MCU":level===2?"Serial, special, dan kisah karakter":"Semesta Marvel di luar MCU utama"}</p></div><div class="count">${countDone}/${subset.length} selesai　⌄</div></div><div class="items"></div>`;
+  const body=section.querySelector(".items");let last="";
+  subset.forEach(({e,i})=>{
+   if(e[1]!==last){last=e[1];const h=document.createElement("div");h.className="group-title";h.textContent=last;body.append(h)}
+   const row=document.createElement("div");row.className="item"+(watched.has(i)?" done":"");
+   const checked=watched.has(i)?"checked":"";
+   row.innerHTML=`<input type="checkbox" id="item-${i}" ${checked} aria-label="Tandai ${esc(e[2])} sudah ditonton"><label for="item-${i}"><span class="name">${esc(e[2])}</span><span class="meta">${esc(e[3])} · ${esc(e[4])}</span></label>${e[5]?`<span class="tag">${esc(e[5])}</span>`:""}`;
+   row.querySelector("input").addEventListener("change",ev=>{if(ev.target.checked)watched.add(i);else watched.delete(i);save()});
+   body.append(row);
+  });
+  section.querySelector(".level-head").addEventListener("click",()=>{body.hidden=!body.hidden});
+  host.append(section);
+ });
+ if(!visible)host.innerHTML='<div class="empty">Tidak ada judul yang cocok. Coba kata kunci atau filter lain.</div>';
+}
+$("search").addEventListener("input",render);$("levelFilter").addEventListener("change",render);$("statusFilter").addEventListener("change",render);
+$("reset").addEventListener("click",()=>{if(confirm("Hapus semua tanda tontonan di browser ini?")){watched.clear();save()}});
+$("export").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({app:"Marvel Watchlist",version:1,watched:[...watched]},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="marvel-watchlist-progress.json";a.click();URL.revokeObjectURL(a.href)});
+$("import").addEventListener("click",()=>$("fileInput").click());
+$("fileInput").addEventListener("change",async ev=>{const f=ev.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.watched))throw Error();watched=new Set(d.watched.filter(n=>Number.isInteger(n)&&n>=0&&n<entries.length));save();alert("Progres berhasil diimpor.")}catch{alert("File tidak valid atau formatnya tidak cocok.")}ev.target.value=""});
+render();
+</script>
+</body></html>
